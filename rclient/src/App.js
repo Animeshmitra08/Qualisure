@@ -5,6 +5,7 @@ import Connect from './pages/Connect';
 import Landing from './pages/Landing_Page';
 import Login from './Authentication/Login';
 import Registration from './Authentication/Registration';
+import Success from './pages/Success';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route path="/" element={<Landing/>} />
       <Route path="/about" element={<About />} />
       <Route path="/connect" element={<Connect />} />
+      <Route path="/success" element={<Success />} />
       <Route path="/login" element={<Login/>} />
       <Route path="/register" element={<Registration />} />
       <Route path="*" element={"Not found"} />
