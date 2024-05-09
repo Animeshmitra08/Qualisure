@@ -1,16 +1,45 @@
 import { useState } from 'react';
 import { Dialog, Popover } from '@headlessui/react';
-import { Link } from 'react-router-dom';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { FaUser } from 'react-icons/fa';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../Context/authContext/AuthContextProvider';
+
+// icons------------------------
+import { MdOutlineArrowDropDown } from "react-icons/md";
+import { MdOutlineArrowDropUp } from "react-icons/md";
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { FaUser } from 'react-icons/fa';
 
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
+  const [arrow, setArrow] = useState(true);
 
-  const { user } = useUserAuth();
+  const navi = useNavigate();
+
+  const { user, doSignOut } = useUserAuth();
+  const handleLogout = async ()=>{
+    try {
+      await doSignOut();
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+  
+  const style1 = ({ isActive }) => {
+    return {
+      fontWeight: isActive ? "bold" : "",
+      borderBottomColor: isActive ? "black" : "",
+      borderBottomWidth: isActive ? "2px" : "",
+    };
+  }
+
+  const style2 = ({ isActive }) => {
+    return {
+      fontWeight: isActive ? "bold" : "",
+    };
+  }
+
 
   return (
     <header className="relative z-40 w-full flex-none text-sm font-semibold leading-6 text-slate-900">
@@ -33,18 +62,20 @@ export default function Navbar() {
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
         
-          <Link to="/" className="text-sm font-semibold leading-6 text-gray-900">
+          <NavLink to="/" 
+            style={style1}
+            className="text-sm font-semibold leading-6 text-gray-900">
             Home
-          </Link>
-          <Link to="/about" className="text-sm font-semibold leading-6 text-gray-900">
+          </NavLink>
+          <NavLink to="/about" style={style1} className="text-sm font-semibold leading-6 text-gray-900">
             About
-          </Link>
-          <Link to="/connect" className="text-sm font-semibold leading-6 text-gray-900">
+          </NavLink>
+          <NavLink to="/connect" style={style1} className="text-sm font-semibold leading-6 text-gray-900">
             Connect
-          </Link>
-          <Link to="/fluctuation" className="text-sm font-semibold leading-6 text-gray-900">
+          </NavLink>
+          <NavLink to="/fluctuation" style={style1} className="text-sm font-semibold leading-6 text-gray-900">
             Fluctuation
-          </Link>
+          </NavLink>
         </Popover.Group>
         {
           user ? 
@@ -68,16 +99,22 @@ export default function Navbar() {
           </div>
         }
         {
-          toggle?
+          user && toggle?
           <div className="absolute flex gap-2 items-center right-[40px] top-[80px] w-[120px] bg-slate-100 rounded-md shadow-lg">
             <ul className="flex flex-col items-start w-[100%] overflow-hidden rounded-md">
               <button className="px-3 py-2 rect text-left w-[100%] hover:bg-slate-400">Profile</button>
-              <button className="px-3 py-2 text-left w-[100%] hover:bg-slate-400">Dashboard</button>
-              <button className="px-3 py-2 text-left w-[100%] hover:bg-slate-400">Logout</button>
+              <button onClick={()=>{
+                navi("/dashboard");
+              }} className="px-3 py-2 text-left w-[100%] hover:bg-slate-400">Dashboard</button>
+              <button onClick={handleLogout} className="px-3 py-2 text-left w-[100%] hover:bg-slate-400">Logout</button>
             </ul>
           </div>:null
         }
       </nav>
+
+
+
+      {/* mobile view------------------------------------------------------------ */}
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-30" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-40 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
@@ -102,45 +139,88 @@ export default function Navbar() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">                
-                <Link
+                <NavLink
                   to="/"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  style={style2}
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
                 >
                   Home
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   to="/about"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  style={style2}
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
                 >
                   About
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   to="/connect"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  style={style2}
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
                 >
                   Connect
-                </Link>
-                <Link
+                </NavLink>
+                <NavLink
                   to="/fluctuation"
+                  style={style2}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Fluctuation
-                </Link>
+                </NavLink>
               </div>
-              <div className="py-6">
-                <Link
-                  to="/register"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Register
-                </Link>
-                <Link
-                  to="/login"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </Link>
-              </div>
+
+              {
+                user ? 
+                <div className="py-4">
+                  <div className="-mx-3 flex items-center justify-between rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
+                  >
+                    <div className="flex items-center gap-2">
+                      <FaUser/>
+                      <p>{user.email}</p>
+                    </div>
+                    <div className="flex">
+                      <button className="text-3xl" onClick={()=>{
+                        setArrow(!arrow);
+                        setToggle(!toggle);
+                      }}>
+                        {
+                          arrow?<MdOutlineArrowDropDown/>:<MdOutlineArrowDropUp/>
+                        }
+                      </button>
+                    </div>         
+                  </div>
+                  {
+                    user && toggle?
+                    <div className="flex gap-2 items-center">
+                      <ul className="flex flex-col items-start w-[100%]">
+                        <button className="rounded-lg px-3 w-[100%] text-left py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50">Profile</button>
+
+                        <button onClick={()=>{
+                          navi("/dashboard");
+                        }} className="rounded-lg px-3 w-[100%] text-left py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50">Dashboard</button>
+
+                        <button onClick={handleLogout} className="rounded-lg px-3 w-[100%] text-left py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50">Logout</button>
+                      </ul>
+                    </div>
+                    :null
+                  }
+                </div>
+                :
+                <div className="py-6">
+                  <Link
+                    to="/register"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Register
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Log in
+                  </Link>
+                </div>
+              }  
             </div>
           </div>
         </Dialog.Panel>
