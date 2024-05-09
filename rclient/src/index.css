@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.rect::after{
+  content: '';
+  position: absolute;
+  z-index: -10;
+  top: -5px;
+  right: 10px;
+  background-color: rgb(255, 255, 255);
+  height: 25px;
+  width: 25px;
+  transform: rotate(45deg);
+}
+.rect:hover::after{
+  background-color: rgb(148 163 184);
+}

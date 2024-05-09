@@ -7,7 +7,8 @@ import { useUserAuth } from '../Context/authContext/AuthContextProvider';
 
 
 export default function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [toggle, setToggle] = useState(false);
 
   const { user } = useUserAuth();
 
@@ -47,9 +48,13 @@ export default function Navbar() {
         </Popover.Group>
         {
           user ? 
-          <div className="flex gap-2 items-center bg-slate-100 rounded-full px-3 py-1 shadow-lg">
-            <FaUser/>
-            <p>{user.email}</p>
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-1">
+            <button onClick={()=>{
+              setToggle(!toggle)
+            }} className="flex gap-2 items-center bg-slate-100 rounded-full px-3 py-1 shadow-lg cursor-pointer">
+              <FaUser/>
+              <p>{user.email}</p>
+            </button>
           </div>
           :
           <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-1">
@@ -62,13 +67,16 @@ export default function Navbar() {
             </Link>
           </div>
         }
-        {/* <div className="flex gap-2 items-center bg-slate-100 rounded-md px-3 py-1 shadow-lg">
-          <ul>
-            <li>Profile</li>
-            <li>Dashboard</li>
-            <li>Logout</li>
-          </ul>
-        </div> */}
+        {
+          toggle?
+          <div className="absolute flex gap-2 items-center right-[40px] top-[80px] w-[120px] bg-slate-100 rounded-md shadow-lg">
+            <ul className="flex flex-col items-start w-[100%] overflow-hidden rounded-md">
+              <button className="px-3 py-2 rect text-left w-[100%] hover:bg-slate-400">Profile</button>
+              <button className="px-3 py-2 text-left w-[100%] hover:bg-slate-400">Dashboard</button>
+              <button className="px-3 py-2 text-left w-[100%] hover:bg-slate-400">Logout</button>
+            </ul>
+          </div>:null
+        }
       </nav>
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-30" />

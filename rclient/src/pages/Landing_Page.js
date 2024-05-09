@@ -3,6 +3,8 @@ import Navbar from './Navbar'
 import { MdCancel } from "react-icons/md";
 import { FaCheck } from 'react-icons/fa';
 import {  useNavigate } from 'react-router-dom';
+import axios from "axios";
+
 
 const Landing = () => {
 
@@ -22,6 +24,17 @@ const Landing = () => {
   const handleDrop = (e) =>{
     e.preventDefault();
     setFiles(e.dataTransfer.files[0]);
+    const data = new FormData();
+    data.append("files[]", files);
+
+    axios.post('http://127.0.0.1:5000/upload', data)
+    .then((response)=>{
+      console.log(response);
+      alert("successfully added");
+    })
+    .catch((error)=> {
+      console.log(error);
+    });
   }
 
   const handleDragOver =(e)=>{
@@ -59,31 +72,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Pop-up dialogue box----------------------------------------------------- */}
-        {files && (
-              <div className="absolute w-screen h-screen top-0 left-0 z-50 bg-slate-300 bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
-                <div className="bg-white rounded-lg p-5 w-1/3 flex flex-col justify-center gap-2 shadow-lg">
-
-                  {/* file namesss----------------------------------- */}                  
-                  <p>
-                  {files.name}
-                  </p>
-
-                  <div className="flex justify-between">
-                    <button onClick={()=>{
-                      setFiles(null)
-                    }}
-                    className="flex items-center gap-2 border-2 px-2 rounded-md border-red-700"><MdCancel/> Cancel</button>
-                    <button 
-                    onClick={()=>{
-                      navi('/success')
-                    }}
-                    className="flex items-center gap-2 border-2 px-2 py-1 rounded-md border-green-600"><FaCheck/> Submit</button>              
-                  </div>
-                </div>          
-              </div>
-          )
-        }
+       
         
       </main>
     </>
