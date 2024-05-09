@@ -2,8 +2,10 @@ from flask import Flask, request , jsonify, json
 import urllib.request
 from werkzeug.utils import  secure_filename
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
