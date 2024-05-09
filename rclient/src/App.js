@@ -6,19 +6,30 @@ import Landing from './pages/Landing_Page';
 import Login from './Authentication/Login';
 import Registration from './Authentication/Registration';
 import Success from './pages/Success';
+import Fluctuation from './pages/Fluctuation';
+import ProtectedRoute from './Context/Protected/ProtectedRoute';
+import { UserAuthContextProvider } from './Context/authContext/AuthContextProvider';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
     <>
-    <Routes>
-      <Route path="/" element={<Landing/>} />
-      <Route path="/about" element={<About />} />
-      <Route path="/connect" element={<Connect />} />
-      <Route path="/success" element={<Success />} />
-      <Route path="/login" element={<Login/>} />
-      <Route path="/register" element={<Registration />} />
-      <Route path="*" element={"Not found"} />
-    </Routes>
+    <UserAuthContextProvider>
+      <Routes>
+        <Route path="/" element={<Landing/>} />
+        <Route path="/home" element={<Landing/>} />
+        <Route path="/about" element={<About />} />
+        <Route path="/connect" element={<Connect />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/fluctuation" element={<Fluctuation/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Registration />} />
+        <Route path="/dashboard" element={<ProtectedRoute>
+                                            <Dashboard/>
+                                          </ProtectedRoute>} />
+        <Route path="*" element={"Not found"} />
+      </Routes>
+    </UserAuthContextProvider>
     </>
   );
 }

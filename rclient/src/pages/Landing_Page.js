@@ -1,12 +1,39 @@
-import React from 'react'
+import React, {useRef, useState} from 'react'
 import Navbar from './Navbar'
+import { MdCancel } from "react-icons/md";
+import { FaCheck } from 'react-icons/fa';
+import {  useNavigate } from 'react-router-dom';
 
 const Landing = () => {
+
+  const [files, setFiles] = useState(null);
+
+  const inputRef = useRef();
+
+  const navi = useNavigate();
+
+  
+
+
+  const handleChange = (e) =>{
+    setFiles(e.target.files[0])
+  }
+
+  const handleDrop = (e) =>{
+    e.preventDefault();
+    setFiles(e.dataTransfer.files[0]);
+  }
+
+  const handleDragOver =(e)=>{
+    e.preventDefault();
+  }
+
+
   return (
     <>
     <Navbar/>
     <main className="relative mx-auto -mt-[6.50rem] overflow-hidden h-screen pt-[5.75rem]">
-        <img src="./assets/62620.jpg" className="absolute h-screen -top-[1rem] -ml-[120rem] max-w-none w-[200rem] -z-10 sm:-ml-[100.5rem] left-1/3"/>
+        <img alt='landing_bg' src="./assets/62620.jpg" className="absolute h-screen -top-[1rem] -ml-[120rem] max-w-none w-[200rem] -z-10 sm:-ml-[100.5rem] left-1/3"/>
         <section className="relative w-full max-w-container px-4 sm:px-6 lg:px-8 h-[35rem] sm:h-[28em] mt-[10rem] flex flex-col items-center">
           <h1 className="text-slate-900 font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-center dark:text-white">
             Welcome to Qualisure
@@ -17,20 +44,47 @@ const Landing = () => {
           <br />
           <div className="md:w-1/3 w-1/2">            
             <div class="flex items-center justify-center w-full shadow-xl">
-                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full border-2 border-cyan-600 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                <label for="dropzone-file" onDrop={handleDrop} onDragOver={handleDragOver} class="flex flex-col items-center justify-center w-full border-2 border-cyan-600 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                         <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                         </svg>
                         <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">PDF, SVG, PNG, JPG or GIF</p>
-                    </div>
-                    <input id="dropzone-file" type="file" class="hidden" />
+                        <p class="text-xs text-gray-500 dark:text-gray-400">'txt', 'pdf', 'png', 'jpg', 'jpeg',
+                          'doc', 'docx'</p>
+                    </div>                    
+                    <input id="dropzone-file" type="file" ref={inputRef}  hidden onChange={handleChange} />                    
                 </label>
             </div> 
-
           </div>
         </section>
+
+        {/* Pop-up dialogue box----------------------------------------------------- */}
+        {files && (
+              <div className="absolute w-screen h-screen top-0 left-0 z-50 bg-slate-300 bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+                <div className="bg-white rounded-lg p-5 w-1/3 flex flex-col justify-center gap-2 shadow-lg">
+
+                  {/* file namesss----------------------------------- */}                  
+                  <p>
+                  {files.name}
+                  </p>
+
+                  <div className="flex justify-between">
+                    <button onClick={()=>{
+                      setFiles(null)
+                    }}
+                    className="flex items-center gap-2 border-2 px-2 rounded-md border-red-700"><MdCancel/> Cancel</button>
+                    <button 
+                    onClick={()=>{
+                      navi('/success')
+                    }}
+                    className="flex items-center gap-2 border-2 px-2 py-1 rounded-md border-green-600"><FaCheck/> Submit</button>              
+                  </div>
+                </div>          
+              </div>
+          )
+        }
+        
       </main>
     </>
   )
