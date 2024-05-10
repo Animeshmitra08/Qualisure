@@ -1,7 +1,50 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUserAuth } from '../Context/authContext/AuthContextProvider';
+
+// icons----------------------------------
+import { FcGoogle } from "react-icons/fc";
+
+
 
 const Login = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  // const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+
+  const { login, googleSignIn} = useUserAuth();
+  const navi = useNavigate();
+
+
+  const handleSubmit = async (event) =>{
+    event.preventDefault();
+    setError("");
+    
+    try {
+      await login(email, password);
+      navi("/dashboard");
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  const handleGoogle = async (e)=>{
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navi("/home");
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  const resetPass = (e) =>{
+    e.preventDefault();
+    navi("/reset");
+  }
+
+
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900 h-screen">
@@ -14,14 +57,38 @@ const Login = () => {
                     <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Sign in to your account
                     </h1>
-                    <form className="space-y-4 md:space-y-6" action="#">
+                    { error && 
+                      <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+                        <p className="font-bold">Error</p>
+                        <p>{error}</p>
+                      </div>
+                    }
+
+                    <div className="w-full font-medium rounded-lg text-base px-5 text-center flex justify-around items-center">
+                        <p>Signin with</p>
+                        <button onClick={handleGoogle}  className="flex gap-2 bg-blue-400 px-4 py-2 rounded-md focus:ring-4 focus:outline-none focus:ring-blue-100 hover:shadow-lg hover:scale-[1.02]">
+                          <FcGoogle className="text-2xl"/> 
+                          <p>Google</p>
+                        </button>                        
+                    </div>
+                    <hr />
+                    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                         <div>
-                            <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                            <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required=""/>
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                            <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            onChange={(e)=>{
+                              setEmail(e.target.value);
+                            }}
+                            placeholder="name@company.com"
+                            required/>
                         </div>
                         <div>
-                            <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
+                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            onChange={(e)=>{
+                              setPassword(e.target.value);
+                            }}
+                            required/>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="flex items-start">
@@ -29,17 +96,17 @@ const Login = () => {
                                   <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required=""/>
                                 </div>
                                 <div className="ml-3 text-sm">
-                                  <label for="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
+                                  <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
                                 </div>
                             </div>
-                            <a href="#" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Forgot password?</a>
+                            <button onClick={resetPass} className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Forgot password?</button>                            
                         </div>
                         <button type="submit" className="w-full text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:shadow-lg hover:scale-[1.02]">Sign in</button>
                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                             Don't have an account yet? 
                             <Link to="/register" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</Link>
                         </p>
-                    </form>
+                    </form>                    
                 </div>
             </div>
         </div>
