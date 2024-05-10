@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUserAuth } from '../Context/authContext/AuthContextProvider';
 
+import { FcGoogle } from "react-icons/fc";
+
 const Registration = () => {
 
   const [email, setEmail] = useState("");
@@ -9,7 +11,7 @@ const Registration = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("")
 
-  const { signUp } = useUserAuth();
+  const { signUp, googleSignIn } = useUserAuth();
 
   const navi = useNavigate();
 
@@ -27,6 +29,16 @@ const Registration = () => {
     }
     else{
       setError("Password don't match");
+    }
+  }
+
+  const handleGoogle = async (e)=>{
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navi("/home");
+    } catch (err) {
+      setError(err.message);
     }
   }
 
@@ -48,6 +60,17 @@ const Registration = () => {
                       <p>{error}</p>
                     </div>
                   }
+
+                  <div className="w-full font-medium rounded-lg text-base px-5 text-center flex justify-around items-center">
+                        <p>Signin with</p>
+                        <button onClick={handleGoogle}  className="flex gap-2 bg-blue-400 px-4 py-2 rounded-md focus:ring-4 focus:outline-none focus:ring-blue-100 hover:shadow-lg hover:scale-[1.02]">
+                          <FcGoogle className="text-2xl"/> 
+                          <p>Google</p>
+                        </button>                        
+                    </div>
+                    <hr />
+
+
                   <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                       <div>
                           <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>

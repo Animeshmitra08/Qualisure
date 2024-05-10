@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useUserAuth } from '../Context/authContext/AuthContextProvider'
+import { useUserAuth } from '../Context/authContext/AuthContextProvider';
+
+// icons----------------------------------
+import { FcGoogle } from "react-icons/fc";
 
 
 
@@ -10,7 +13,7 @@ const Login = () => {
   // const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  const { login } = useUserAuth();
+  const { login, googleSignIn} = useUserAuth();
   const navi = useNavigate();
 
 
@@ -24,6 +27,21 @@ const Login = () => {
     } catch (err) {
       setError(err.message);
     }
+  }
+
+  const handleGoogle = async (e)=>{
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navi("/home");
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  const resetPass = (e) =>{
+    e.preventDefault();
+    navi("/reset");
   }
 
 
@@ -45,9 +63,18 @@ const Login = () => {
                         <p>{error}</p>
                       </div>
                     }
+
+                    <div className="w-full font-medium rounded-lg text-base px-5 text-center flex justify-around items-center">
+                        <p>Signin with</p>
+                        <button onClick={handleGoogle}  className="flex gap-2 bg-blue-400 px-4 py-2 rounded-md focus:ring-4 focus:outline-none focus:ring-blue-100 hover:shadow-lg hover:scale-[1.02]">
+                          <FcGoogle className="text-2xl"/> 
+                          <p>Google</p>
+                        </button>                        
+                    </div>
+                    <hr />
                     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                         <div>
-                            <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                             <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                             onChange={(e)=>{
                               setEmail(e.target.value);
@@ -56,7 +83,7 @@ const Login = () => {
                             required/>
                         </div>
                         <div>
-                            <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                             <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e)=>{
                               setPassword(e.target.value);
@@ -72,14 +99,14 @@ const Login = () => {
                                   <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
                                 </div>
                             </div>
-                            <Link to="/" className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Forgot password?</Link>
+                            <button onClick={resetPass} className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Forgot password?</button>                            
                         </div>
                         <button type="submit" className="w-full text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 hover:shadow-lg hover:scale-[1.02]">Sign in</button>
                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                             Don't have an account yet? 
                             <Link to="/register" className="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</Link>
                         </p>
-                    </form>
+                    </form>                    
                 </div>
             </div>
         </div>
