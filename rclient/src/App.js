@@ -10,6 +10,7 @@ import Fluctuation from './pages/Fluctuation';
 import ProtectedRoute from './Context/Protected/ProtectedRoute';
 import { UserAuthContextProvider } from './Context/authContext/AuthContextProvider';
 import Dashboard from './pages/Dashboard';
+import PopUp from './Component/PopUp';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/connect" element={<Connect />} />
         <Route path="/success" element={<Success />} />
         <Route path="/fluctuation" element={<Fluctuation/>} />
+        <Route path="/reset" element={<PopUp/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Registration />} />
         <Route path="/dashboard" element={<ProtectedRoute>
