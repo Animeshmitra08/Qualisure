@@ -37,6 +37,7 @@ export default function Navbar() {
   const style2 = ({ isActive }) => {
     return {
       fontWeight: isActive ? "bold" : "",
+      backgroundColor: isActive? "rgb(192 233 253 / 29%)" : ""
     };
   }
 
@@ -142,14 +143,13 @@ export default function Navbar() {
                 <NavLink
                   to="/"
                   style={style2}
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
-                >
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">
                   Home
                 </NavLink>
                 <NavLink
                   to="/about"
                   style={style2}
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100 active:bg-gray-100"
                 >
                   About
                 </NavLink>
@@ -209,7 +209,7 @@ export default function Navbar() {
                 <div className="py-6">
                   <Link
                     to="/register"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 "
                   >
                     Register
                   </Link>
