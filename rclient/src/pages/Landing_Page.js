@@ -14,9 +14,6 @@ const Landing = () => {
 
   const navi = useNavigate();
 
-  
-
-
   const handleChange = (e) =>{
     setFiles(e.target.files[0])
   }
