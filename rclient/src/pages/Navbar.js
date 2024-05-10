@@ -15,7 +15,9 @@ import { RiDashboardFill } from "react-icons/ri";
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
+  const [menuToggle, setMenuToggle] = useState(false);
   const [arrow, setArrow] = useState(true);
+  const [imgUrl, setImgUrl] = useState("");
 
   const navi = useNavigate();
 
@@ -48,6 +50,8 @@ export default function Navbar() {
     }
   }, [user])  
 
+
+  // console.log(user.photoURL);
   
   
   const style1 = ({ isActive }) => {
@@ -108,8 +112,14 @@ export default function Navbar() {
             <button onClick={()=>{
                   setToggle(!toggle)
                 }} className="flex gap-2 items-center bg-slate-100 rounded-full px-3 py-1 shadow-lg cursor-pointer">
-              <FaUser/>
-              <p>{user.email}</p>
+                {
+                  user.photoURL !== null ? 
+                  <img src={user.photoURL} alt="profileimg" className="w-[20px] rounded-full" />
+                  :
+                  <FaUser/>
+                }
+              <p>{!user.displayName ? user.email : user.displayName
+              }</p>
             </button>
             {
               toggle?
@@ -204,23 +214,29 @@ export default function Navbar() {
                 <div className="py-4">
                   <div className="-mx-3 flex items-center justify-between rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">                      
+                    {
+                      user.photoURL !== null ? 
+                      <img src={user.photoURL} alt="profileimg" className="w-[20px] rounded-full" />
+                      :
                       <FaUser/>
-                      <p>{user.email}</p>
+                    }
+                      <p>{!user.displayName ? user.email : user.displayName
+                      }</p>
                     </div>
                     <div className="flex">
                       <button className="text-3xl" onClick={()=>{
                         setArrow(!arrow);
-                        setToggle(!toggle);
+                        setMenuToggle((prev)=> !prev);
                       }}>
                         {
-                          arrow?<MdOutlineArrowDropDown/>:<MdOutlineArrowDropUp/>
+                          arrow ? <MdOutlineArrowDropDown/>:<MdOutlineArrowDropUp/>
                         }
                       </button>
                     </div>         
                   </div>
                   {
-                    user && toggle?
+                    user && menuToggle ?
                     <div className="flex gap-2 items-center">
                       <ul className="flex flex-col items-start w-[100%]">
                         <button className="rounded-lg px-3 w-[100%] text-left py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50">Profile</button>
