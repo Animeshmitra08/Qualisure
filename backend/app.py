@@ -1,79 +1,35 @@
-from flask import Flask, request , jsonify, json
-import urllib.request
-from werkzeug.utils import  secure_filename
-import os
-from flask_cors import CORS
+import firebase_admin
+from firebase_admin import credentials, storage
+from flask import Flask, jsonify
+import numpy as np
+import cv2
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
 
-UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
-#allowed extension..........................
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg',
-                          'doc', 'docx'])
+# Initialize Firebase Admin SDK with service account credentials
+cred = credentials.Certificate(r'D:\New folder (2)\4th yr\Qualisure\backend\firebasestoragekey\privatekey.json')
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'qualisure-3edce.appspot.com'
+})
 
 
-#for checking allowed extension....... 
-def allowedFile(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-#landing route...................................
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-
-#upload route.....................................
-@app.route("/upload", methods=['POST'])
-def upload_file():
-    # check if the post request has the file part if 'files[]' not in request.files:
-    if'files[]' not in request.files:
-        resp = jsonify({
-            "message": 'No file part in the request', 
-            "status": 'failed'
-        })        
-        resp.status_code = 400
-        return resp
+# Route to check files from Firebase Storage
+@app.route('/firebase/files')
+def list_files():
+    bucket = storage.bucket()
+    blobs = bucket.list_blobs()
     
-    files = request.files.getlist('files[]')
+    file_list = [blob.name for blob in blobs]
+    return file_list
+# bucket = storage.bucket()
+# blobs = bucket.get_blob("WhatsApp Image 2024-05-07 at 09.33.58_f4a47262.jpg")
+# # file_list = [blob.name for blob in blobs]
+# arr = np.frombuffer(blobs.download_as_string(), np.uint8)
+# img = cv2.imdecode(arr, cv2.COLOR_BGR2BGR5555)
 
-    errors = {}
-    success = False
+# cv2.imshow('image', img)
+# cv2.waitKey(0)
 
-    for file in files:
-        if file and allowedFile(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            success = True
-        else:
-            resp = jsonify({
-                "message":'file type not allowed',
-                "status":'failed'
-            })
-            return resp
-        
-    if success and errors:
-        errors['message'] = "file's uploaded successfully"
-        errors['status'] = "failed"
-        resp = jsonify(errors)
-        resp.status_code = 500
-        return resp
-    
-    if success:
-        resp = jsonify({
-            "message":'file uploaded successfully',
-            "status":'success'
-        })
-        resp.status_code = 201
-        return resp
-    else:
-        resp = jsonify(errors)
-        resp.status_code = 500
-        return resp
-    
-    
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -17,7 +17,6 @@ export default function Navbar() {
   const [toggle, setToggle] = useState(false);
   const [menuToggle, setMenuToggle] = useState(false);
   const [arrow, setArrow] = useState(true);
-  const [imgUrl, setImgUrl] = useState("");
 
   const navi = useNavigate();
 
@@ -66,6 +65,7 @@ export default function Navbar() {
     return {
       fontWeight: isActive ? "bold" : "",
       backgroundColor: isActive? "rgb(192 233 253 / 29%)" : ""
+
     };
   }
 
@@ -181,7 +181,7 @@ export default function Navbar() {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">                
                 <NavLink
-                  to="/"
+                  to="/"               
                   style={style2}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">
                   Home

@@ -21,7 +21,7 @@ function App() {
         <Route path="/home" element={<Landing/>} />
         <Route path="/about" element={<About />} />
         <Route path="/connect" element={<Connect />} />
-        <Route path="/success" element={<Success />} />
+        <Route path="/result" element={<Success />} />
         <Route path="/fluctuation" element={<Fluctuation/>} />
         <Route path="/reset" element={<PopUp/>} />
         <Route path="/login" element={<Login/>} />
