@@ -28,7 +28,7 @@ const Registration = () => {
       }
     }
     else{
-      setError("Password don't match");
+      setError("Password doesn't match");
     }
   }
 

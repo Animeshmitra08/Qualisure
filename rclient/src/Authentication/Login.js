@@ -19,8 +19,7 @@ const Login = () => {
 
   const handleSubmit = async (event) =>{
     event.preventDefault();
-    setError("");
-    
+    setError("");    
     try {
       await login(email, password);
       navi("/dashboard");
