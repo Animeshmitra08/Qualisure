@@ -3,9 +3,9 @@ import { useUserAuth } from '../authContext/AuthContextProvider'
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({children}) => {
-    let { user } = useUserAuth();
+    const { user } = useUserAuth();
     if (!user) {
-        return <Navigate to='/login' replace={true}/>
+        return <Navigate to='/login' replace/>
     }
   return children
 }

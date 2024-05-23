@@ -6,6 +6,7 @@ import {  useNavigate } from 'react-router-dom';
 import { storage } from '../Firebase/Firebase';
 import { ref, uploadBytes } from 'firebase/storage';
 import { v4 } from "uuid";
+import { database } from '../Firebase/Firebase';
 
 
 const Landing = () => {
@@ -14,6 +15,8 @@ const Landing = () => {
   const [loading, setLoading] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
   const [isAlert, setIsAlert] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [url, setUrl] = useState('')
 
 
   const inputRef = useRef(null);
@@ -22,7 +25,7 @@ const Landing = () => {
 
   
 
-
+// file validation------------------------------------------------------------------------
   const isValidFileType = (file) => {
     // List of allowed file extensions
     const allowedExtensions = ['.pdf', '.docx', '.txt', '.jpeg', '.jpg', '.png', '.doc'];
@@ -61,6 +64,7 @@ const Landing = () => {
   }
   const handleDragOver =(e)=>{
     e.preventDefault();
+    
   }
   
   const handleClick = (e) =>{
@@ -88,6 +92,10 @@ const Landing = () => {
       setLoading(false)
     }    
   }
+
+  // const handleClick = (e) =>{
+  //   e.preventDefault();
+  // }
 
 
 
@@ -122,6 +130,7 @@ const Landing = () => {
           </h2>
           <br />
           <div className="md:w-1/3 w-1/2">    
+          {/* <progress value={progress} max="100"/> */}
           {!files?        
             <div className="flex items-center justify-center w-full shadow-xl">
                 <label htmlFor='dropzone-file' onDrop={handleDrop} onDragOver={handleDragOver}  className="flex flex-col items-center justify-center w-full border-2 border-cyan-600 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
@@ -132,8 +141,9 @@ const Landing = () => {
                         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">'txt', 'pdf', 'png', 'jpg', 'jpeg',
                           'doc', 'docx'</p>
-                    </div>                   
+                    </div>
                     <input id="dropzone-file" type="file" accept=".pdf,.docx,.txt,.jpeg,.jpg,.png,.doc" ref={inputRef} hidden  onChange={handleChange} />
+                    {url && <a href={url} target="_blank" rel="noopener noreferrer">View File</a>}
                 </label>
             </div>:
             <div className='flex flex-col items-center justify-around w-full h-[150px] border-2 border-cyan-600 border-dashed shadow-xl bg-[#f2e8cf] p-4 rounded-lg'>
