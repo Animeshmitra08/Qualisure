@@ -1,7 +1,7 @@
 import cv2
 from PIL import Image
-import pytesseract
-import requests
+#import pytesseract
+#import requests
 
 import app
 
@@ -38,15 +38,17 @@ def check_image_quality(image_path):
 
 file_paths = app.list_files()
 for blob in file_paths:
-    check_image_quality(blob)
+    # check_image_quality(blob)
+    print(blob)
 
 # # Specify the path to your image
 image_path ="files/3fbabe70-2486-4ad0-9ed7-fc47c8845228.jpg"  # Replace with the path to your image
 
 
 # # Check the image quality
-quality = check_image_quality(image_path.replace("files/", ""))
-print(f"Image Quality: {quality}")
+def quality():
+    quality = check_image_quality(image_path.replace("files/", ""))
+    return print(f"Image Quality: {quality}")
 
 # # List of image paths
 # image_paths = ["",""]

@@ -21,7 +21,11 @@ const Login = () => {
     event.preventDefault();
     setError("");    
     try {
-      await login(email, password);
+      const userCredentials = await login(email, password);
+      const user = userCredentials.user;
+
+      
+      setError(null);
       navi("/dashboard");
     } catch (err) {
       setError(err.message);
