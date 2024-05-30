@@ -3,7 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { useUserAuth } from '../Context/authContext/AuthContextProvider';
 import {useNavigate } from "react-router-dom";
 import { updateProfile } from 'firebase/auth';
-import { ref, set, update } from 'firebase/database';
+import { onValue, ref, set, update } from 'firebase/database';
 import { database } from '../Firebase/Firebase';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
@@ -36,7 +36,7 @@ const Profile = () => {
       setProfileData({
         fullName : `${user.displayName}`,
         email:`${user.email}`,
-        phoneNumber:`${profileData.phoneNumber}` 
+        phoneNumber:`${user.phoneNumber}` 
       })
     }
 
@@ -50,6 +50,19 @@ const Profile = () => {
       return () => clearTimeout(timer);
     }
     
+    const fetchPhoneNumber = async () => {
+      if (user) {
+        const phnRef=  ref(database, 'users/' + user.uid + '/phoneNumber');
+        onValue(phnRef, (snapshot) => {
+          const phoneNumber = snapshot.val();
+          if (phoneNumber) {
+            setPhoneNumber(phoneNumber);
+          }
+        });
+      }
+    };
+
+    fetchPhoneNumber();
   }, [user,alertMsg,error]);   
 
 
@@ -66,7 +79,6 @@ const Profile = () => {
         .catch((error) => {
           setError(error.message);
         });
-        setPhoneNumber(phoneNumber);
 
         const uid = user.uid;
         update(ref(database, 'users/' + uid), {
@@ -84,6 +96,8 @@ const Profile = () => {
     setEditable(false);
   }
   
+
+
   
   
 
