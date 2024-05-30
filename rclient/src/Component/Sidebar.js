@@ -1,12 +1,30 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { IoMdMore } from "react-icons/io";
 import { useUserAuth } from '../Context/authContext/AuthContextProvider';
+import { RiLogoutCircleRLine } from "react-icons/ri";
+import { IoHome } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const SidebarContext = createContext();
 const Sidebar = ({children}) => {    
-    const [expanded, setExpanded] = useState(true)
-    const { user } = useUserAuth();
+    const [expanded, setExpanded] = useState(true);
+    const [toggle, setToggle] = useState(false);
+
+    const { user, doSignOut } = useUserAuth();
+
+    const menuRef = useRef();
+
+    const navi = useNavigate();
+
+    const handleLogout = async ()=>{
+        try {
+            await doSignOut();
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
   return (
     <>
         <aside className='h-screen'>
@@ -31,7 +49,28 @@ const Sidebar = ({children}) => {
                             <h1 className='font-semibold'>{user.displayName}</h1>
                             <p className='text-xs'>{user.email}</p>
                         </div>
-                        <IoMdMore size={25}/>                    
+
+                        <div ref={menuRef} className="hidden lg:flex lg:flex-1 lg:justify-end gap-1">
+                            <button onClick={()=>{setToggle(!toggle)}}>
+                                <IoMdMore size={25}/> 
+                            </button> 
+                            {
+                                toggle?
+                                <div className="absolute flex gap-2 items-center left-[120px] bottom-[50px] w-[150px] bg-slate-100 rounded-md shadow-lg">
+                                    <ul className="flex flex-col items-start w-[100%] overflow-hidden rounded-md">                            
+                                        <button onClick={()=>{
+                                        navi("/");
+                                        }} className="px-3 py-2 text-left w-[100%] hover:bg-slate-400 flex gap-2 items-center"><IoHome/> Home</button>
+                                    
+                                    <button onClick={handleLogout} className="px-3 py-2 text-left w-[100%] hover:bg-slate-400 flex gap-2 items-center"><RiLogoutCircleRLine/> Logout</button>
+                                    </ul>
+                                </div>
+                                :
+                                null
+                            }
+                        </div>
+
+
                     </div>
                 </div>
                 

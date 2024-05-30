@@ -122,7 +122,11 @@ const Profile = () => {
           }
         
           <h1 className='text-xl font-bold p-2'>User Details</h1>      
-          <button className='text-lg' onClick={()=>setEditable((prev)=>!prev)}><FaEdit/></button>
+          <button className='text-lg' data-tooltip-target="tooltip-light" data-tooltip-style="light" onClick={()=>setEditable((prev)=>!prev)}><FaEdit/></button>
+          {/* <div id="tooltip-light" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
+              Tooltip content
+              <div className="tooltip-arrow" data-popper-arrow></div>
+          </div> */}
         </div>
         <form method='POST' onSubmit={handleUpdate}>
             <div className="grid gap-6 mb-6 md:grid-cols-2">                
@@ -139,10 +143,10 @@ const Profile = () => {
                     onChange={handleChange}
                     required />
                 </div>
-                <div className='w-full row-span-2 flex justify-center items-center'>
+                <div className='w-full row-span-2 flex justify-center items-center flex-col gap-2'>
                   <img className='rounded-full w-[150px]' src={user.photoURL} alt="profile_photo" />
                   {editable ?
-                  <button className=''>Change Photo</button>
+                  <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Change Photo</button>
                   :
                   null
                   }

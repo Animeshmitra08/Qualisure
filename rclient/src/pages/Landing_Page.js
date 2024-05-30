@@ -93,11 +93,6 @@ const Landing = () => {
     }    
   }
 
-  // const handleClick = (e) =>{
-  //   e.preventDefault();
-  // }
-
-
 
 
   return (
