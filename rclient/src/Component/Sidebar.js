@@ -34,6 +34,7 @@ const Sidebar = ({children}) => {
                         <IoMdMore size={25}/>                    
                     </div>
                 </div>
+                
             </nav>
         </aside>
     </>

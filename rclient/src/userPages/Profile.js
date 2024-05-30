@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { useUserAuth } from '../Context/authContext/AuthContextProvider';
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
 import {useNavigate } from "react-router-dom";
 import { updateProfile } from 'firebase/auth';
 import { ref, set, update } from 'firebase/database';
 import { database } from '../Firebase/Firebase';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 const Profile = () => {
   const [editable, setEditable] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
   const [error, setError] = useState("");
   const { user } = useUserAuth();
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [profileData, setProfileData] = useState({
     fullName : "",
-    phnNumber : "",
     email:"",
     photoUrl: ""
   })
@@ -35,7 +35,8 @@ const Profile = () => {
     }else{
       setProfileData({
         fullName : `${user.displayName}`,
-        email:`${user.email}`, 
+        email:`${user.email}`,
+        phoneNumber:`${profileData.phoneNumber}` 
       })
     }
 
@@ -54,8 +55,8 @@ const Profile = () => {
 
   const handleUpdate = async (e) =>{
     e.preventDefault();
-    if (user.displayName === profileData.fullName) {
-      setError("UserName already up to date");
+    if (user.displayName === profileData.fullName && user.phoneNumber === phoneNumber && user.email === profileData.email) {
+      setError("Already up to date");
     }
     else if (user) {
       updateProfile(user, {displayName:profileData.fullName})
@@ -65,10 +66,12 @@ const Profile = () => {
         .catch((error) => {
           setError(error.message);
         });
+        setPhoneNumber(phoneNumber);
 
         const uid = user.uid;
         update(ref(database, 'users/' + uid), {
           userName: profileData.fullName,
+          phoneNumber : phoneNumber
         }).then(() => {          
           setAlertMsg("Profile updated successfully");
         })
@@ -108,8 +111,7 @@ const Profile = () => {
           <button className='text-lg' onClick={()=>setEditable((prev)=>!prev)}><FaEdit/></button>
         </div>
         <form method='POST' onSubmit={handleUpdate}>
-            <div className="grid gap-6 mb-6 md:grid-cols-2">
-                
+            <div className="grid gap-6 mb-6 md:grid-cols-2">                
                 <div>
                     <label htmlFor="fullName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full name</label>
                     <input 
@@ -123,17 +125,21 @@ const Profile = () => {
                     onChange={handleChange}
                     required />
                 </div>
+                <div className='w-full row-span-2 flex justify-center items-center'>
+                  <img className='rounded-full w-[150px]' src={user.photoURL} alt="profile_photo" />
+                  {editable ?
+                  <button className=''>Change Photo</button>
+                  :
+                  null
+                  }
+                </div>
                 <div>
                     <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone number</label>
-                    <PhoneInput 
-                    type="tel" 
-                    id="phone"                     
-                    defaultCountry='IN' 
-                    international 
-                    value={profileData.phnNumber} 
-                    onChange={handleChange} 
-                    disabled={editable? false : true}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 disabled:bg-slate-300" 
+                    <PhoneInput
+                    country={'in'}
+                    value={phoneNumber} 
+                    onChange={setPhoneNumber} 
+                    disabled={editable? false : true}                    
                     required />
                 </div>
             </div>

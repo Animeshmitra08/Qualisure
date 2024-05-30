@@ -34,8 +34,8 @@ const Registration = () => {
         set(ref(database, 'users/' + uid), {
           userName:"",
           email: email,
-          password:password,
-          profile_picture : ""
+          profile_picture : "",
+          phoneNumber : ""
         });
         setError(null);
         navi("/home");
@@ -51,12 +51,25 @@ const Registration = () => {
   const handleGoogle = async (e)=>{
     e.preventDefault();
     try {
-      await googleSignIn();
+      const userCredentials = await googleSignIn();
+      const user = userCredentials.user;
+
+        // Set user data in RealTime Database
+        const uid = user.uid;
+        set(ref(database, 'users/' + uid), {
+          userName: user.displayName,
+          email: user.email,
+          profile_picture : user.photoURL,
+          phoneNumber: user.phoneNumber
+        });
+        setError(null);
+        console.log(user)
       navi("/home");
     } catch (err) {
       setError(err.message);
     }
   }
+  
 
   return (
   <>
